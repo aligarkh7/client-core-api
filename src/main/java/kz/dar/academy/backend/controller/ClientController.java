@@ -1,7 +1,7 @@
 package kz.dar.academy.backend.controller;
 
-import jakarta.validation.Valid;
-import kz.dar.academy.backend.model.ClientModel;
+import kz.dar.academy.backend.model.ClientRequest;
+import kz.dar.academy.backend.model.ClientResponse;
 import kz.dar.academy.backend.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 public class ClientController {
 
     @Autowired
-    ClientService clientService;
+    private ClientService clientService;
 
     @GetMapping("/check")
     public ResponseEntity<String> checkClient(){
@@ -22,31 +22,29 @@ public class ClientController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createClientModel(@Valid @RequestBody ClientModel clientModel) {
-        clientService.createClientModel(clientModel);
-        return ResponseEntity.ok("Client Model Created");
+    public ClientResponse createClient(@RequestBody ClientRequest clientRequest) {
+        return clientService.createClient(clientRequest);
     }
 
     @GetMapping("/all")
-    public List<ClientModel> getAllClientModels() {
-        return clientService.getAllClientModels();
+    public List<ClientResponse> getAllClients() {
+        return clientService.getAllClients();
     }
 
-    @GetMapping("/{clientId}")
-    public ResponseEntity<ClientModel> getClientModelById(@PathVariable String clientId) {
-        return ResponseEntity.ok(clientService.getClientModelById(clientId));
+    @GetMapping
+    public ClientResponse getClientByClientId(@RequestParam String clientId) {
+        return clientService.getClientByClientId(clientId);
     }
 
-    @PutMapping("/{clientId}")
-    public ResponseEntity<String> updateClientModelById(@PathVariable String clientId,
-                                                   @Valid @RequestBody ClientModel clientModel) {
-        clientService.updateClientModelById(clientId, clientModel);
-        return ResponseEntity.ok("Client Model Updated");
+    @PutMapping
+    public ClientResponse  updateClient(@RequestParam String clientId,
+                                        @RequestBody ClientRequest clientRequest) {
+        return clientService.updateClientByClientId(clientId, clientRequest);
     }
 
-    @DeleteMapping("/{clientId}")
-    public ResponseEntity<String> deleteClientModelById(@PathVariable String clientId) {
-        clientService.deleteClientModelById(clientId);
-        return ResponseEntity.ok("Client Model Deleted");
+    @DeleteMapping
+    public void deleteClientByClientId(@RequestParam String clientId) {
+        clientService.deleteClientByClientId(clientId);
     }
+
 }
